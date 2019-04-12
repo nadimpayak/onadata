@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block additional-headers %}
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" href="{{STATIC_URL}}galleria/themes/classic/galleria.classic.css">
+<link rel="stylesheet" href="{{STATIC_URL}}css/form.css">
+{% endblock %}
+
+{% block body %}
+    <body id="photos">
+    {% include "topbar.html" %}
+
+{% block javascript %}
+{{ block.super }}
+    <style>
+        .previous {
+            background-color: #f1f1f1;
+            color: black;
+        }
+        .next {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .footer {
+            position: fixed;
+            left: 100px;
+            right: 100px;
+            bottom: 0;
+            background: none;
+            border: none;
+        }
+
+        .container {
+            width: 40%;
+            height: 40%;
+            margin: 0 auto;
+        }
+
+    </style>
+
+<script type="text/javascript">
+    let images = {{ images|safe }};
+    let current = 0;
+    $(document).ready(function() {
+        append_image(images[0]);
+
+        $("#nButt").live("click", function(){
+            $("#mDiv").remove();
+            if (current > images.length-1) {
+                current = 0;
+            }
+            append_image(images[current]);
+            current++;
+        });
+        $("#pButt").live("click", function(){
+            $("#mDiv").remove();
+            if (current < 0) {
+                current = images.length-1;
+            }
+            append_image(images[current]);
+            current--;
+        });
+    });
+    let mBody = document.getElementById("photos");
+
+    function append_image(img_conf) {
+        let iDiv = document.createElement("div");
+        let img = document.createElement("img");
+        let mFoot = document.createElement("div");
+        let pButt = document.createElement("button");
+        let nButt = document.createElement("button");
+        let mDiv = document.createElement("div");
+        nButt.setAttribute("id", "nButt");
+        pButt.setAttribute("id", "pButt");
+        mDiv.setAttribute("id", "mDiv");
+        mFoot.setAttribute("id", "foot");
+
+        mBody.setAttribute('style',"margin: 0px; background: #0e0e0e;");
+
+        img.setAttribute("src", img_conf.large);
+        img.setAttribute("style", "cursor: zoom-in;display: flex;");
+        iDiv.setAttribute("class", "container");
+        iDiv.appendChild(img);
+        mDiv.appendChild(iDiv);
+
+        mFoot.setAttribute("class", "footer");
+
+        pButt.setAttribute("class", "previous pull-left");
+        pButt.innerHTML = "&laquo; Previous";
+
+        nButt.setAttribute("class", "next pull-right");
+        nButt.innerHTML = "Next &raquo;";
+        mFoot.appendChild(pButt);
+        mFoot.appendChild(nButt);
+        mDiv.appendChild(mFoot);
+        mBody.appendChild(mDiv);
+
+    }
+
+</script>
+{% endblock %}
+</body>
+{% endblock %}

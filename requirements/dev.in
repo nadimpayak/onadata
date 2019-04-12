@@ -1,0 +1,9 @@
+# include base.pip
+-r base.in
+
+django-extensions
+ipdb
+pylint<2
+pylint-django==0.11.1
+yapf
+isort
